@@ -26,12 +26,20 @@ const ProtectedRoute = ({ children }) => {
 
 // Layout principal para rutas autenticadas
 const MainLayout = ({ children }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   return (
     <div className="flex min-h-screen">
-      <Sidebar />
-      <div className="flex flex-col flex-1 ml-64">
-        <Header />
-        <main className="flex-1 bg-bg pt-24 px-8 pb-8 overflow-auto">
+      <Sidebar
+        isOpen={isSidebarOpen}
+        setIsOpen={setIsSidebarOpen}
+        mobileOpen={mobileOpen}
+        setMobileOpen={setMobileOpen}
+      />
+      <div className={`flex flex-col flex-1 transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : 'md:ml-20'} ml-0`}>
+        <Header isSidebarOpen={isSidebarOpen} onToggleMobileSidebar={() => setMobileOpen(true)} />
+        <main className="flex-1 bg-bg pt-24 px-4 md:px-8 pb-8 overflow-auto">
           <div className="max-w-7xl mx-auto">{children}</div>
         </main>
         <Footer />

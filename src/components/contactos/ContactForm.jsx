@@ -8,8 +8,8 @@ export const ContactForm = ({ contacto, onSubmit, onCancel, catalogs }) => {
     telefono: '',
     provincia_id: '',
     municipio_id: '',
-    cargo_id: '',
-    partido_id: '',
+    cargo: '',
+    partido: '',
     afinidad: 'neutro',
     influencia: 'medio',
     relacion: '',
@@ -25,16 +25,42 @@ export const ContactForm = ({ contacto, onSubmit, onCancel, catalogs }) => {
   const [error, setError] = useState('');
   const [errors, setErrors] = useState({});
 
+  const splitFullName = (fullName = '') => {
+    const name = fullName.trim();
+    if (!name) return { firstName: '', lastName: '' };
+    const parts = name.split(/\s+/);
+    if (parts.length === 1) return { firstName: parts[0], lastName: '' };
+    return {
+      firstName: parts.slice(0, -1).join(' '),
+      lastName: parts.slice(-1).join(' '),
+    };
+  };
+
   useEffect(() => {
     if (contacto) {
+      let nombre = contacto.nombre || '';
+      let apellidos = contacto.apellidos || contacto.apellido || '';
+
+      if (!apellidos && nombre.trim().includes(' ')) {
+        const split = splitFullName(nombre);
+        nombre = split.firstName;
+        apellidos = split.lastName;
+      }
+
+      if (!nombre && apellidos.trim().includes(' ')) {
+        const split = splitFullName(apellidos);
+        nombre = split.firstName;
+        apellidos = split.lastName;
+      }
+
       setFormData({
-        nombre: contacto.nombre || '',
-        apellidos: contacto.apellidos || contacto.apellido || '',
+        nombre,
+        apellidos,
         telefono: contacto.telefono || '',
         provincia_id: contacto.provincia_id || '',
         municipio_id: contacto.municipio_id || '',
-        cargo_id: contacto.cargo_id || '',
-        partido_id: contacto.partido_id || '',
+        cargo: contacto.cargo || contacto.cargo_nombre || '',
+        partido: contacto.partido || contacto.partido_nombre || '',
         afinidad: (contacto.afinidad || 'neutro').toLowerCase(),
         influencia: (contacto.influencia || 'medio').toLowerCase(),
         relacion: contacto.relacion || contacto.relacion_nombre || '',
@@ -70,7 +96,7 @@ export const ContactForm = ({ contacto, onSubmit, onCancel, catalogs }) => {
     if (!formData.nombre.trim()) nextErrors.nombre = 'El nombre es requerido';
     if (!formData.telefono.trim()) nextErrors.telefono = 'El teléfono es requerido';
     if (!formData.municipio_id) nextErrors.municipio_id = 'El municipio es requerido';
-    if (!formData.cargo_id) nextErrors.cargo_id = 'El cargo es requerido';
+    if (!formData.cargo.trim()) nextErrors.cargo = 'El cargo es requerido';
     if (!formData.afinidad) nextErrors.afinidad = 'La afinidad es requerida';
 
     setErrors(nextErrors);
@@ -94,8 +120,12 @@ export const ContactForm = ({ contacto, onSubmit, onCancel, catalogs }) => {
         telefono: formData.telefono.trim(),
         provincia_id: formData.provincia_id ? Number(formData.provincia_id) : null,
         municipio_id: formData.municipio_id ? Number(formData.municipio_id) : null,
-        cargo_id: formData.cargo_id ? Number(formData.cargo_id) : null,
-        partido_id: formData.partido_id ? Number(formData.partido_id) : null,
+        cargo: formData.cargo.trim(),
+        cargo_nombre: formData.cargo.trim(),
+        partido: formData.partido.trim(),
+        partido_nombre: formData.partido.trim(),
+        cargo_id: null,
+        partido_id: null,
         afinidad: formData.afinidad,
         influencia: formData.influencia,
         relacion: formData.relacion.trim(),
@@ -188,40 +218,30 @@ export const ContactForm = ({ contacto, onSubmit, onCancel, catalogs }) => {
         {/* Cargo */}
         <div>
           <label className="block text-xs font-bold text-navy uppercase tracking-wider mb-3">Cargo *</label>
-          <select
-            name="cargo_id"
-            value={formData.cargo_id}
+          <input
+            type="text"
+            name="cargo"
+            value={formData.cargo}
             onChange={handleChange}
-            className={inputClass(!!errors.cargo_id)}
+            placeholder="Cargo del contacto"
+            className={inputClass(!!errors.cargo)}
             disabled={loading}
-          >
-            <option value="">Seleccionar cargo</option>
-            {catalogs.cargos?.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.nombre}
-              </option>
-            ))}
-          </select>
-          {errors.cargo_id && <p className="text-red-600 text-xs mt-1 font-semibold">{errors.cargo_id}</p>}
+          />
+          {errors.cargo && <p className="text-red-600 text-xs mt-1 font-semibold">{errors.cargo}</p>}
         </div>
 
         {/* Partido */}
         <div>
           <label className="block text-xs font-bold text-navy uppercase tracking-wider mb-3">Partido</label>
-          <select
-            name="partido_id"
-            value={formData.partido_id}
+          <input
+            type="text"
+            name="partido"
+            value={formData.partido}
             onChange={handleChange}
+            placeholder="Partido político"
             className="w-full px-0 py-2 border-0 border-b-2 border-gray-300 focus:border-b-navy focus:outline-none bg-transparent text-gray-900 transition"
             disabled={loading}
-          >
-            <option value="">Seleccionar partido</option>
-            {catalogs.partidos?.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.nombre}
-              </option>
-            ))}
-          </select>
+          />
         </div>
 
         {/* Afinidad */}

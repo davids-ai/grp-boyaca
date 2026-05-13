@@ -187,7 +187,6 @@ export const ContactList = () => {
     },
     { key: 'cargo_nombre', label: 'Cargo' },
     { key: 'municipio_nombre', label: 'Municipio' },
-    { key: 'provincia_nombre', label: 'Provincia' },
     {
       key: 'afinidad',
       label: 'Afinidad',

@@ -242,9 +242,9 @@ export const Reports = () => {
         </div>
 
         {/* Grid de filtros */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {/* Afinidad */}
-          <div>
+          <div className="min-w-0">
             <label className="block text-xs font-semibold text-navy mb-2">Afinidad</label>
             <select
               value={reportFilters.afinidad}
@@ -262,7 +262,7 @@ export const Reports = () => {
           </div>
 
           {/* Influencia */}
-          <div>
+          <div className="min-w-0">
             <label className="block text-xs font-semibold text-navy mb-2">Influencia</label>
             <select
               value={reportFilters.influencia}
@@ -280,7 +280,7 @@ export const Reports = () => {
           </div>
 
           {/* Municipio */}
-          <div>
+          <div className="min-w-0">
             <label className="block text-xs font-semibold text-navy mb-2">Municipio</label>
             <select
               value={reportFilters.municipio_nombre}
@@ -298,7 +298,7 @@ export const Reports = () => {
           </div>
 
           {/* Cargo */}
-          <div>
+          <div className="min-w-0">
             <label className="block text-xs font-semibold text-navy mb-2">Cargo</label>
             <select
               value={reportFilters.cargo_nombre}
@@ -316,7 +316,7 @@ export const Reports = () => {
           </div>
 
           {/* Movilizadores */}
-          <div>
+          <div className="min-w-0">
             <label className="block text-xs font-semibold text-navy mb-2">Movilizadores</label>
             <select
               value={reportFilters.moviliza}
@@ -333,7 +333,7 @@ export const Reports = () => {
       </div>
 
       {/* Estadísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-6">
         <StatCard label="Total" value={stats?.total || 0} color="blue" />
         <StatCard label="Aliados" value={stats?.aliados || 0} color="green" />
         <StatCard label="Opositores" value={stats?.opositores || 0} color="red" />
@@ -342,22 +342,22 @@ export const Reports = () => {
       </div>
 
       {/* Botones de Exportación */}
-      <div className="flex gap-3 flex-wrap">
+      <div className="flex flex-col sm:flex-row gap-3 flex-wrap items-stretch">
         <button
           onClick={handleExportExcel}
-          className="flex items-center gap-2 px-4 py-2 bg-green-soft text-green hover:bg-green-100 rounded-lg font-semibold transition"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-green-soft text-green hover:bg-green-100 rounded-lg font-semibold transition"
         >
           <Download size={18} /> Exportar Excel
         </button>
         <button
           onClick={handleExportPDF}
-          className="flex items-center gap-2 px-4 py-2 bg-red-soft text-red hover:bg-red-100 rounded-lg font-semibold transition"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-red-soft text-red hover:bg-red-100 rounded-lg font-semibold transition"
         >
           <Download size={18} /> Exportar PDF
         </button>
         <button
           onClick={handlePrint}
-          className="flex items-center gap-2 px-4 py-2 bg-bg-app text-text hover:bg-border rounded-lg font-semibold transition"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-bg-app text-text hover:bg-border rounded-lg font-semibold transition"
         >
           <Printer size={18} /> Imprimir
         </button>
@@ -376,7 +376,7 @@ export const Reports = () => {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full table-auto min-w-full">
                 <thead>
                   <tr className="border-b border-border bg-bg-app">
                     <th className="px-6 py-3 text-left text-xs font-semibold text-text-2">NOMBRE</th>
@@ -384,8 +384,8 @@ export const Reports = () => {
                     <th className="px-6 py-3 text-left text-xs font-semibold text-text-2">MUNICIPIO</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-text-2">AFINIDAD</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-text-2">INFLUENCIA</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-text-2">RELACIÓN</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-text-2">TELÉFONO</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-text-2 hidden lg:table-cell">RELACIÓN</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-text-2 hidden xl:table-cell">TELÉFONO</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -416,8 +416,8 @@ export const Reports = () => {
                         </span>
                       </td>
                       <td className="px-6 py-3 text-sm text-text-2">{contact.influencia ? contact.influencia.charAt(0).toUpperCase() + contact.influencia.slice(1) : '—'}</td>
-                      <td className="px-6 py-3 text-sm text-text-2">{contact.relacion_nombre || '—'}</td>
-                      <td className="px-6 py-3 text-sm text-text-2">{contact.telefono || '—'}</td>
+                      <td className="px-6 py-3 text-sm text-text-2 hidden lg:table-cell">{contact.relacion_nombre || '—'}</td>
+                      <td className="px-6 py-3 text-sm text-text-2 hidden xl:table-cell">{contact.telefono || '—'}</td>
                     </tr>
                   ))}
                 </tbody>
